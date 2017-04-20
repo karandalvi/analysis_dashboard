@@ -59,8 +59,8 @@ socket.on('query2', function()
         return;
       }
       connection.execute(
-        "SELECT MASTER_BRANCH.BRANCH_NO || '-' || MASTER_BRANCH.NAME || '-' || MASTER_BRANCH.CITY BRANCH_NAME, ROUND(NVL(ACTUAL.ACTUAL_COLLECTION/1000, 0)) ACTUAL_COLLECTION," +
-        " ROUND(NVL(EXPECTED.EXPECTED_COLLECTION/1000, 0)) EXPECTED_COLLECTION, ROUND(CASE WHEN NVL(ACTUAL.ACTUAL_COLLECTION, 0) > NVL(EXPECTED.EXPECTED_COLLECTION, 0) THEN 0 ELSE" +
+        "SELECT MASTER_BRANCH.BRANCH_NO || '-' || MASTER_BRANCH.NAME || '-' || MASTER_BRANCH.CITY BRANCH_NAME, ROUND(NVL(ACTUAL.ACTUAL_COLLECTION, 0)) ACTUAL_COLLECTION," +
+        " ROUND(NVL(EXPECTED.EXPECTED_COLLECTION, 0)) EXPECTED_COLLECTION, ROUND(CASE WHEN NVL(ACTUAL.ACTUAL_COLLECTION, 0) > NVL(EXPECTED.EXPECTED_COLLECTION, 0) THEN 0 ELSE" +
         " (NVL(EXPECTED.EXPECTED_COLLECTION, 0) - NVL(ACTUAL.ACTUAL_COLLECTION, 0)) / NVL(EXPECTED.EXPECTED_COLLECTION, 0) * 100 END, 2) DEFICIT FROM BRANCH MASTER_BRANCH, (SELECT B.BRANCH_NO," +
         " SUM(T.CREDIT_AMOUNT) ACTUAL_COLLECTION FROM TRANSACTION T, ACCOUNT A, BRANCH B WHERE T.ACCOUNT_NO = A.ACCOUNT_NO AND A.BRANCH_NO = B.BRANCH_NO AND T.TRANSACTION_DATE BETWEEN " +
         " TO_DATE(:sid, 'MMDDYYYY') AND TO_DATE(:eid, 'MMDDYYYY') AND A.STATUS NOT IN ('Terminated', 'Cancelled') GROUP BY B.BRANCH_NO) ACTUAL, (SELECT B.BRANCH_NO, SUM(R.REPAY_AMOUNT)" +
@@ -97,8 +97,8 @@ socket.on('query3', function()
       }
       connection.execute(
         "SELECT G.STATE, ROUND(G.ACTUAL_COLLECTION) ACTUAL_COLLECTION, ROUND(G.EXPECTED_COLLECTION) EXPECTED_COLLECTION, ROUND(CASE WHEN G.ACTUAL_COLLECTION > G.EXPECTED_COLLECTION THEN 0 ELSE" +
-        " (G.EXPECTED_COLLECTION - G.ACTUAL_COLLECTION) / G.EXPECTED_COLLECTION * 100 END, 2) DEFICIT FROM (SELECT MASTER_BRANCH.STATE STATE, SUM(NVL(ACTUAL.ACTUAL_COLLECTION/1000,0)) ACTUAL_COLLECTION," +
-        " SUM(NVL(EXPECTED.EXPECTED_COLLECTION/1000,0)) EXPECTED_COLLECTION FROM BRANCH MASTER_BRANCH, (SELECT B.BRANCH_NO, SUM(T.CREDIT_AMOUNT) ACTUAL_COLLECTION FROM TRANSACTION T, ACCOUNT A, BRANCH B WHERE T.ACCOUNT_NO ="+
+        " (G.EXPECTED_COLLECTION - G.ACTUAL_COLLECTION) / G.EXPECTED_COLLECTION * 100 END, 2) DEFICIT FROM (SELECT MASTER_BRANCH.STATE STATE, SUM(NVL(ACTUAL.ACTUAL_COLLECTION,0)) ACTUAL_COLLECTION," +
+        " SUM(NVL(EXPECTED.EXPECTED_COLLECTION,0)) EXPECTED_COLLECTION FROM BRANCH MASTER_BRANCH, (SELECT B.BRANCH_NO, SUM(T.CREDIT_AMOUNT) ACTUAL_COLLECTION FROM TRANSACTION T, ACCOUNT A, BRANCH B WHERE T.ACCOUNT_NO ="+
         " A.ACCOUNT_NO AND A.BRANCH_NO = B.BRANCH_NO AND T.TRANSACTION_DATE BETWEEN TO_DATE(:sid, 'MMDDYYYY') AND TO_DATE(:eid, 'MMDDYYYY') AND A.STATUS NOT IN ('Terminated', 'Cancelled') GROUP BY B.BRANCH_NO) ACTUAL," +
         " (SELECT B.BRANCH_NO, SUM(R.REPAY_AMOUNT) EXPECTED_COLLECTION FROM REPAYMENT_SCHEDULE R, ACCOUNT A, BRANCH B WHERE R.ACCOUNT_NO = A.ACCOUNT_NO AND A.BRANCH_NO = B.BRANCH_NO AND R.REPAY_DATE BETWEEN TO_DATE(:sid," +
         " 'MMDDYYYY') AND TO_DATE(:eid, 'MMDDYYYY') AND A.STATUS NOT IN ('Terminated', 'Cancelled') GROUP BY B.BRANCH_NO) EXPECTED WHERE MASTER_BRANCH.BRANCH_NO = ACTUAL.BRANCH_NO(+) AND MASTER_BRANCH.BRANCH_NO =" +
@@ -332,6 +332,208 @@ socket.on('query9', function()
         });
     });
 });
+
+socket.on('query10', function()
+{
+  oracledb.getConnection(
+    {
+      user          : "kdalvi",
+      password      : "DBMSsp17",
+      connectString : "oracle.cise.ufl.edu/orcl"
+    },
+    function(err, connection)
+    {
+      if (err) {
+        console.error(err.message);
+        return;
+      }
+      connection.execute(
+        "SELECT D.STATE, D.NO_BRANCHES BRANCHES, D.TOTAL_NO_OF_LOANS TOTAL, D.ACTIVE_LOANS ACTIVE, DECODE(GREATEST(D.EDUCATION_LOANS, D.VEHICLE_LOANS, "
+        +" D.COMMERCIAL_LOANS, D.PERSONAL_LOANS, D.HOME_LOANS), D.EDUCATION_LOANS, 'EDUCATION LOAN', D.VEHICLE_LOANS, 'CAR LOAN', D.PERSONAL_LOANS, 'PERSONAL LOAN', D.HOME_LOANS, 'HOME LOAN', D.COMMERCIAL_LOANS, 'COMMERCIAL LOAN')"
+        +" MOST_POPULAR, ROUND(GREATEST(D.EDUCATION_LOANS, D.VEHICLE_LOANS, D.COMMERCIAL_LOANS, D.PERSONAL_LOANS, D.HOME_LOANS) / D.TOTAL_NO_OF_LOANS * 100, 2) PSHARE, DECODE(LEAST(D.EDUCATION_LOANS, D.VEHICLE_LOANS,"
+        +" D.COMMERCIAL_LOANS, D.PERSONAL_LOANS, D.HOME_LOANS), D.EDUCATION_LOANS, 'EDUCATION LOAN', D.VEHICLE_LOANS, 'CAR LOAN', D.PERSONAL_LOANS, 'PERSONAL LOAN', D.HOME_LOANS, 'HOME LOAN', D.COMMERCIAL_LOANS, 'COMMERCIAL LOAN')"
+        +" LEAST_POPULAR, ROUND(LEAST(D.EDUCATION_LOANS, D.VEHICLE_LOANS, D.COMMERCIAL_LOANS, D.PERSONAL_LOANS, D.HOME_LOANS) / D.TOTAL_NO_OF_LOANS * 100, 2) LSHARE FROM (SELECT B.STATE, COUNT(DISTINCT B.BRANCH_NO)"
+        +" NO_BRANCHES, COUNT(1) TOTAL_NO_OF_LOANS, SUM(DECODE(A.STATUS, 'Disbursed', 1, 'Approved', 1, 0)) ACTIVE_LOANS, SUM(DECODE(A.STATUS, 'Cancelled', 1, 'Terminated', 1, 0)) CLOSED_LOANS, ROUND(AVG(A.LOAN_AMOUNT),2) AVG_LOAN,"
+        +" ROUND(AVG(A.REPAYMENT_TENURE),2) AVG_TENURE, ROUND(AVG(SYSDATE - C.DATE_OF_BIRTH)/365) AVG_CUSTOMER_AGE, SUM(DECODE(P.PRODUCT_NO, 100, 1, 0)) VEHICLE_LOANS, SUM(DECODE(P.PRODUCT_NO, 200, 1, 0)) EDUCATION_LOANS,"
+        +" SUM(DECODE(P.PRODUCT_NO, 300, 1, 0)) HOME_LOANS, SUM(DECODE(P.PRODUCT_NO, 400, 1, 0)) PERSONAL_LOANS, SUM(DECODE(P.PRODUCT_NO, 500, 1, 0)) COMMERCIAL_LOANS FROM ACCOUNT A, BRANCH B, CUSTOMER C, PRODUCT P WHERE A.BRANCH_NO ="
+        +" B.BRANCH_NO AND A.CUSTOMER_NO = C.CUSTOMER_NO AND A.PRODUCT_NO = P.PRODUCT_NO AND A.SUB_PRODUCT_NO = P.SUB_PRODUCT_NO GROUP BY B.STATE) D",
+        {}, //bind variables
+        function(err, result)
+        {
+          if (err) {
+            console.error(err.message);
+            doRelease(connection);
+            return;
+          }
+          console.log('Request Processed Successfully');
+          socket.emit('data_query10',result);
+          doRelease(connection);
+        });
+    });
+});
+
+socket.on('query11', function()
+{
+  oracledb.getConnection(
+    {
+      user          : "kdalvi",
+      password      : "DBMSsp17",
+      connectString : "oracle.cise.ufl.edu/orcl"
+    },
+    function(err, connection)
+    {
+      if (err) {
+        console.error(err.message);
+        return;
+      }
+      connection.execute(
+        "SELECT D.CITY CITY, D.NO_BRANCHES BRANCHES, D.TOTAL_NO_OF_LOANS LOANS, D.ACTIVE_LOANS ACTIVE, DECODE(GREATEST(D.EDUCATION_LOANS, D.VEHICLE_LOANS, D.COMMERCIAL_LOANS, D.PERSONAL_LOANS,"
+        +" D.HOME_LOANS), D.EDUCATION_LOANS, 'EDUCATION LOAN', D.VEHICLE_LOANS, 'CAR LOAN', D.PERSONAL_LOANS, 'PERSONAL LOAN', D.HOME_LOANS, 'HOME LOAN', D.COMMERCIAL_LOANS, 'COMMERCIAL LOAN') MOST_POPULAR, ROUND(GREATEST(D.EDUCATION_LOANS, D.VEHICLE_LOANS,"
+        +" D.COMMERCIAL_LOANS, D.PERSONAL_LOANS, D.HOME_LOANS) / D.TOTAL_NO_OF_LOANS * 100, 2) PSHARE, DECODE(LEAST(D.EDUCATION_LOANS, D.VEHICLE_LOANS, D.COMMERCIAL_LOANS, D.PERSONAL_LOANS, D.HOME_LOANS), D.EDUCATION_LOANS, 'EDUCATION LOAN',"
+        +" D.VEHICLE_LOANS, 'CAR LOAN', D.PERSONAL_LOANS, 'PERSONAL LOAN', D.HOME_LOANS, 'HOME LOAN', D.COMMERCIAL_LOANS, 'COMMERCIAL LOAN') LEAST_POPULAR, ROUND(LEAST(D.EDUCATION_LOANS, D.VEHICLE_LOANS, D.COMMERCIAL_LOANS, D.PERSONAL_LOANS, D.HOME_LOANS) /"
+        +" D.TOTAL_NO_OF_LOANS * 100, 2) LSHARE FROM (SELECT B.CITY, B.STATE, COUNT(DISTINCT B.BRANCH_NO) NO_BRANCHES, COUNT(1) TOTAL_NO_OF_LOANS, SUM(DECODE(A.STATUS, 'Disbursed', 1, 'Approved', 1, 0)) ACTIVE_LOANS, SUM(DECODE(A.STATUS, 'Cancelled', 1, 'Terminated',"
+        +" 1, 0)) CLOSED_LOANS, ROUND(AVG(A.LOAN_AMOUNT),2) AVG_LOAN, ROUND(AVG(A.REPAYMENT_TENURE),2) AVG_TENURE, ROUND(AVG(SYSDATE - C.DATE_OF_BIRTH)/365) AVG_CUSTOMER_AGE, SUM(DECODE(P.PRODUCT_NO, 100, 1, 0)) VEHICLE_LOANS, SUM(DECODE(P.PRODUCT_NO, 200, 1, 0))"
+        +" EDUCATION_LOANS, SUM(DECODE(P.PRODUCT_NO, 300, 1, 0)) HOME_LOANS, SUM(DECODE(P.PRODUCT_NO, 400, 1, 0)) PERSONAL_LOANS, SUM(DECODE(P.PRODUCT_NO, 500, 1, 0)) COMMERCIAL_LOANS FROM ACCOUNT A, BRANCH B, CUSTOMER C, PRODUCT P WHERE A.BRANCH_NO = B.BRANCH_NO AND"
+        +" A.CUSTOMER_NO = C.CUSTOMER_NO AND A.PRODUCT_NO = P.PRODUCT_NO AND A.SUB_PRODUCT_NO = P.SUB_PRODUCT_NO GROUP BY B.CITY, B.STATE) D",
+        {}, //bind variables
+        function(err, result)
+        {
+          if (err) {
+            console.error(err.message);
+            doRelease(connection);
+            return;
+          }
+          console.log('Request Processed Successfully');
+          socket.emit('data_query11',result);
+          doRelease(connection);
+        });
+    });
+});
+
+socket.on('query12', function()
+{
+  oracledb.getConnection(
+    {
+      user          : "kdalvi",
+      password      : "DBMSsp17",
+      connectString : "oracle.cise.ufl.edu/orcl"
+    },
+    function(err, connection)
+    {
+      if (err) {
+        console.error(err.message);
+        return;
+      }
+      connection.execute(
+        "SELECT * FROM TOT_TUP",
+        {}, //bind variables
+        function(err, result)
+        {
+          if (err) {
+            console.error(err.message);
+            doRelease(connection);
+            return;
+          }
+          console.log('Request Processed Successfully');
+          socket.emit('data_query12',result);
+          doRelease(connection);
+        });
+    });
+});
+//
+// socket.on('query13', function()
+// {
+//   oracledb.getConnection(
+//     {
+//       user          : "kdalvi",
+//       password      : "DBMSsp17",
+//       connectString : "oracle.cise.ufl.edu/orcl"
+//     },
+//     function(err, connection)
+//     {
+//       if (err) {
+//         console.error(err.message);
+//         return;
+//       }
+//       connection.execute(
+//         ,
+//         {}, //bind variables
+//         function(err, result)
+//         {
+//           if (err) {
+//             console.error(err.message);
+//             doRelease(connection);
+//             return;
+//           }
+//           console.log('Request Processed Successfully');
+//           socket.emit('data_query13',result);
+//           doRelease(connection);
+//         });
+//     });
+// });
+//
+// socket.on('query14', function()
+// {
+//   oracledb.getConnection(
+//     {
+//       user          : "kdalvi",
+//       password      : "DBMSsp17",
+//       connectString : "oracle.cise.ufl.edu/orcl"
+//     },
+//     function(err, connection)
+//     {
+//       if (err) {
+//         console.error(err.message);
+//         return;
+//       }
+//       connection.execute(
+//         ,
+//         {}, //bind variables
+//         function(err, result)
+//         {
+//           if (err) {
+//             console.error(err.message);
+//             doRelease(connection);
+//             return;
+//           }
+//           console.log('Request Processed Successfully');
+//           socket.emit('data_query14',result);
+//           doRelease(connection);
+//         });
+//     });
+// });
+//
+// socket.on('query15', function()
+// {
+//   oracledb.getConnection(
+//     {
+//       user          : "kdalvi",
+//       password      : "DBMSsp17",
+//       connectString : "oracle.cise.ufl.edu/orcl"
+//     },
+//     function(err, connection)
+//     {
+//       if (err) {
+//         console.error(err.message);
+//         return;
+//       }
+//       connection.execute(
+//         ,
+//         {}, //bind variables
+//         function(err, result)
+//         {
+//           if (err) {
+//             console.error(err.message);
+//             doRelease(connection);
+//             return;
+//           }
+//           console.log('Request Processed Successfully');
+//           socket.emit('data_query15',result);
+//           doRelease(connection);
+//         });
+//     });
+// });
+
 
 socket.on('start', function(data)
 {

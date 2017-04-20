@@ -34,7 +34,7 @@ td {
   <body>
 
 
-    <div class="w3-sidebar w3-bar-block w3-light-grey" style="width:18%">
+    <div class="w3-sidebar w3-bar-block w3-light-grey" style="width:20%">
       <div class="w3-container w3-dark-grey">
         <h4>Home</h4>
       </div>
@@ -53,26 +53,33 @@ td {
       <button id="get_query7" type="button" class="btn btn-success"  style="width:100%">Actual Collection Distribution</button><br>
       <button id="get_query8" type="button" class="btn btn-primary"  style="width:100%">Returning Customers</button><br>
       <button id="get_query9" type="button" class="btn btn-success"  style="width:100%">Avg Customer Profile</button><br>
-
+      <button id="get_query10" type="button" class="btn btn-primary"  style="width:100%">State Summary</button><br>
+      <button id="get_query11" type="button" class="btn btn-success"  style="width:100%">City Summary</button><br>
+      <button id="get_query12" type="button" class="btn btn-primary"  style="width:100%">Total Tuples</button><br>
     </div>
 
-    <div id="headerDivAboutUs" align="center" style="padding-top:50px; padding-bottom:50px; margin-left:21%; margin-right:3%" >
+    <div id="headerDivAboutUs" align="center" style="padding-top:50px; padding-bottom:50px; margin-left:23%; margin-right:3%" >
       <h3>About Us</h3><br>
-      The performance dashboard is a web based application for use by employees of a loan company thereby enabling them to calculate loan eligibility for new customers and analysing the loan data across different dimensions such as the region, state, branch, product, customer demographics and so on. The portal is only meant for employees of the company and cannot be accessed by customers. The employees should have a valid username login credentials to be able to access the system and its services.
+      <h5 align="justify">The performance dashboard is a web based application for use by employees of a loan company to analyze the performance of the company with the help of various intuitive charts.
+          Currently, there are 11 complex reports that display dynamic bar charts and line charts to present a clearer picture to the user.
+          The user can provide the start date and end date for many of these reports to view data for a specific period. The default start and end date have been set to
+          1-Apr-2017 and 20-Apr-2017 respectively.
+      </h5>
     </div>
 
-    <div id="headerDivTerms" align="center" style="padding-top:50px; padding-bottom:50px; margin-left:21%; margin-right:3%" >
-      <h3>Contact</h3><br><br>
+    <div id="headerDivTerms" align="center" style="padding-top:50px; padding-bottom:50px; margin-left:23%; margin-right:3%" >
+      <h3>Contact Us</h3><br><br>
       Karan Dalvi (karan.j.dalvi@ufl.edu) <br><br>
       Tanya Arora (arora.tanya@ufl.edu)<br><br>
       Aishwarya Dubey (dubey.aishwarya@ufl.edu)<br><br>
-      Shreya Yaduvanshi <br>
+      Shreya Yaduvanshi (yaduvanshi.shreya@edu)<br>
     </div>
 
-    <div id="contentDiv" align="center" style="padding-top:50px; padding-bottom:50px; margin-left:21%; margin-right:3%">
+    <div id="contentDiv" align="center" style="padding-top:50px; padding-bottom:50px; margin-left:23%; margin-right:3%">
       <section id="userprompt">
        Enter Start Date (MMDDYYYY): <input type=text id="start" value="04012017"> <br><br>
-       Enter End Date (MMDDYYYY):&nbsp&nbsp <input type=text id="end" value="04202017"> <br><br><br>
+       Enter End Date (MMDDYYYY):&nbsp&nbsp <input type=text id="end" value="04202017"> <br><br>
+       <font style="font-size:9px">Click on the sidebar button to update the data</font><br><hr>
       </section>
         <div id="canvasSection" style="margin-left:3%; margin-right:3%"><canvas id="myChart" style="width:400px height:400px"></canvas> </div>
         <br><br>
@@ -120,6 +127,7 @@ td {
 
         socket.on('data_query1', function(data) {
           focusContent();
+          showDateFilter();
           updateTable(data);
           clearChart();
           updateChart1(data);
@@ -133,6 +141,7 @@ td {
 
         socket.on('data_query2', function(data) {
           focusContent();
+          showDateFilter();
           updateTable(data);
           clearChart();
           updateChart2(data);
@@ -146,6 +155,7 @@ td {
 
         socket.on('data_query3', function(data) {
           focusContent();
+          showDateFilter();
           updateTable(data);
           clearChart();
           updateChart3(data);
@@ -159,6 +169,7 @@ td {
 
         socket.on('data_query4', function(data) {
           focusContent();
+          showDateFilter();
           updateTable(data);
           clearChart();
           updateChart4(data);
@@ -172,6 +183,7 @@ td {
 
         socket.on('data_query5', function(data) {
           focusContent();
+          hideDateFilter();
           updateTable(data);
           clearChart();
           updateChart5(data);
@@ -185,6 +197,7 @@ td {
 
         socket.on('data_query6', function(data) {
           focusContent();
+          showDateFilter();
           updateTable(data);
           clearChart();
           updateChart6(data);
@@ -198,6 +211,7 @@ td {
 
         socket.on('data_query7', function(data) {
           focusContent();
+          showDateFilter();
           updateTable(data);
           clearChart();
           updateChart7(data);
@@ -211,6 +225,7 @@ td {
 
         socket.on('data_query8', function(data) {
           focusContent();
+          hideDateFilter();
           updateTable(data);
           clearChart();
           updateChart8(data);
@@ -224,9 +239,52 @@ td {
 
         socket.on('data_query9', function(data) {
           focusContent();
+          hideDateFilter();
           updateTable(data);
           clearChart();
           updateChart9(data);
+        });
+
+        // ---------------------------------------------
+
+        $('#get_query10').on('click', function() {
+          socket.emit('query10', {});
+        });
+
+        socket.on('data_query10', function(data) {
+          focusContent();
+          hideDateFilter();
+          updateTable(data);
+          clearChart();
+          // updateChart9(data);
+        });
+
+        // ---------------------------------------------
+
+        $('#get_query11').on('click', function() {
+          socket.emit('query11', {});
+        });
+
+        socket.on('data_query11', function(data) {
+          focusContent();
+          hideDateFilter();
+          updateTable(data);
+          clearChart();
+          // updateChart9(data);
+        });
+
+        // ---------------------------------------------
+
+        $('#get_query12').on('click', function() {
+          socket.emit('query12', {});
+        });
+
+        socket.on('data_query12', function(data) {
+          focusContent();
+          hideDateFilter();
+          updateTable(data);
+          clearChart();
+          // updateChart9(data);
         });
 
         $('#start').bind('input', function() {
@@ -354,6 +412,12 @@ td {
                 'rgba(255, 206, 86, 0.2)',
                 'rgba(75, 192, 192, 0.2)',
                 'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
                 'rgba(255, 159, 64, 0.2)'
             ],
             borderColor: [
@@ -380,7 +444,13 @@ td {
                 'rgba(255, 206, 86, 1)',
                 'rgba(75, 192, 192, 1)',
                 'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
+                'rgba(255, 159, 64, 1)',
+                'rgba(255,99,132,1)',
+                  'rgba(54, 162, 235, 1)',
+                  'rgba(255, 206, 86, 1)',
+                  'rgba(75, 192, 192, 1)',
+                  'rgba(153, 102, 255, 1)',
+                  'rgba(255, 159, 64, 1)'
             ],
             borderWidth: 1
         };
@@ -393,6 +463,8 @@ td {
                 datasets: [d1]
             },
             options: {
+              scaleShowLabelBackdrop : true,
+              scaleShowLabels : true,
                 scales: {
                     yAxes: [{
                         ticks: {
@@ -456,6 +528,8 @@ td {
                 datasets: [d1]
             },
             options: {
+              scaleShowLabelBackdrop : true,
+              scaleShowLabels : true,
                 scales: {
                     yAxes: [{
                         ticks: {
@@ -490,18 +564,20 @@ td {
             label: 'Highest Revenue',
             data: myData1,
             backgroundColor: [
-              'rgba(255, 117, 26, 0.2)',
-              'rgba(255, 117, 26, 0.2)',
-              'rgba(255, 117, 26, 0.2)',
-              'rgba(255, 117, 26, 0.2)',
+              'rgba(132, 181, 0, 0.2)',
+              'rgba(132, 181, 0, 0.2)',
+              'rgba(132, 181, 0, 0.2)',
+              'rgba(132, 181, 0, 0.2)',
+              'rgba(132, 181, 0, 0.2)',
               'rgba(255, 117, 26, 0.2)'
             ],
             borderColor: [
-              'rgba(255, 117, 26, 1)',
-              'rgba(255, 117, 26, 1)',
-              'rgba(255, 117, 26, 1)',
-              'rgba(255, 117, 26, 1)',
-              'rgba(255, 117, 26, 1)'
+              'rgba(132, 181, 0, 1)',
+              'rgba(132, 181, 0, 1)',
+              'rgba(132, 181, 0, 1)',
+              'rgba(132, 181, 0, 1)',
+              'rgba(132, 181, 0, 1)',
+              'rgba(132, 181, 0, 1)'
             ],
             borderWidth: 1
         };
@@ -510,18 +586,19 @@ td {
             label: 'Lowest Revenue',
             data: myData2,
             backgroundColor: [
-              'rgba(54, 162, 235, 0.2)',
-              'rgba(54, 162, 235, 0.2)',
-              'rgba(54, 162, 235, 0.2)',
-              'rgba(54, 162, 235, 0.2)',
+              'rgba(206, 30, 0, 0.2)',
+              'rgba(206, 30, 0, 0.2)',
+              'rgba(206, 30, 0, 0.2)',
+              'rgba(206, 30, 0, 0.2)',
+              'rgba(206, 30, 0, 0.2)',
               'rgba(54, 162, 235, 0.2)'
             ],
             borderColor: [
-              'rgba(54, 162, 255, 1)',
-              'rgba(54, 162, 255, 1)',
-              'rgba(54, 162, 255, 1)',
-              'rgba(54, 162, 255, 1)',
-              'rgba(54, 162, 255, 1)'
+              'rgba(206, 30, 0, 1)',
+              'rgba(206, 30, 0, 1)',
+              'rgba(206, 30, 0, 1)',
+              'rgba(206, 30, 0, 1)',
+              'rgba(206, 30, 0, 1)'
             ],
             borderWidth: 1
         };
@@ -707,10 +784,10 @@ td {
             label: 'Actual Collection Variation (To Previous Day)',
             data: myData,
             backgroundColor: [
-              'rgba(255, 117, 26, 0.2)'
+              'rgba(1, 124, 158, 0.2)'
             ],
             borderColor: [
-              'rgba(255, 117, 26, 1)'
+              'rgba(1, 124, 158, 1)'
             ],
             borderWidth: 1
         };
@@ -826,10 +903,10 @@ td {
             label: 'Avg EMI',
             data: myData3,
             backgroundColor: [
-              'rgba(54, 162, 235, 0.2)'
+              'rgba(80, 165, 0, 0.2)'
             ],
             borderColor: [
-              'rgba(54, 162, 255, 1)'
+              'rgba(80, 165, 0, 1)'
             ],
             borderWidth: 1
         };
@@ -860,6 +937,16 @@ td {
         $('#headerDivTerms').slideUp();
         $('#contentDiv').slideDown();
       }
+
+      function showDateFilter() {
+        $('#userprompt').slideDown();
+      }
+
+      function hideDateFilter() {
+        $('#userprompt').slideUp();
+      }
+
+
     </script>
 
   </body>
