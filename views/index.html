@@ -4,47 +4,812 @@
   <head>
     <title>Home</title>
     <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <style>
+    table, td, th {
+    border: 1px solid black;
+    padding: 4px;
+}
+
+table {
+    border-collapse: collapse;
+    width: 80%;
+}
+
+th {
+    height: 30px;
+    background-color: grey;
+    /*text-align: center;*/
+    /*font-weight: bold;*/
+    color: white;
+    font-size: 15px;
+}
+td {
+  font-size: 11px;
+}
+
+    </style>
   </head>
 
   <body>
 
-    <div class="container" style="padding-top: 50px;">
-      <div class="jumbotron text-center">
 
-        <div class="row" style="padding: 10px;">
-          <div class="resultset"></div>
-          <button id="get_query1" type="button" class="btn btn-primary">GET</button>
-        </div>
-
+    <div class="w3-sidebar w3-bar-block w3-light-grey" style="width:18%">
+      <div class="w3-container w3-dark-grey">
+        <h4>Dashboard</h4>
       </div>
+      <button id="get_query1" type="button" class="btn btn-success" style="width:100%">New Accounts Data</button><br>
+      <button id="get_query2" type="button" class="btn btn-primary" style="width:100%">Branch Wise Deficit</button><br>
+      <button id="get_query3" type="button" class="btn btn-success"  style="width:100%">State Wise Deficit</button><br>
+      <button id="get_query4" type="button" class="btn btn-primary"  style="width:100%">Product Wise Best / Worst State</button><br>
+      <button id="get_query5" type="button" class="btn btn-success"  style="width:100%">Customer Age Distribution</button><br>
+      <button id="get_query6" type="button" class="btn btn-primary"  style="width:100%">Daily Expected Collection</button><br>
+      <button id="get_query7" type="button" class="btn btn-success"  style="width:100%">Actual Collection Distribution</button><br>
+      <button id="get_query8" type="button" class="btn btn-primary"  style="width:100%">Returning Customers</button><br>
+      <button id="get_query9" type="button" class="btn btn-success"  style="width:100%">Avg Customer Profile</button><br>
+      <div class="w3-container w3-dark-grey">
+        <h4>Back Home</h4>
+      </div>
+    </div>
+
+<!-- class="container" -->
+    <div align="center" style="padding-top:50px; padding-bottom:50px; margin-left:21%; margin-right:3%">
+      <section id="userprompt">
+       Enter Start Date (MMDDYYYY): <input type=text id="start" value="04012017"> <br><br>
+       Enter End Date (MMDDYYYY):&nbsp&nbsp <input type=text id="end" value="04202017"> <br><br><br>
+      </section>
+        <div id="canvasSection" style="margin-left:3%; margin-right:3%"><canvas id="myChart" style="width:400px height:400px"></canvas> </div>
+        <br><br>
+          <section id="tSec">
+              Please select the report you want to view.
+          </section>
+
+          <br><br><br>
+
     </div>
 
     <script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
     <script type="text/javascript" src="js/socket.io.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.js"></script>
     <script type="text/javascript">
 
       $(function() {
-        // Create a new WebSocket
         var socket = io();
 
-        // When the html element with the ID get_bpm is clicked, send a message
         $('#get_query1').on('click', function() {
           socket.emit('query1', {});
         });
 
-
-        // When the bpm response is received from the server, render the result
         socket.on('data_query1', function(data) {
-          alert("data recvd");
-          $('#resultset').html(data.value);
+          updateTable(data);
+          clearChart();
+          updateChart1(data);
         });
 
+        // --------------------------------------------
+
+        $('#get_query2').on('click', function() {
+          socket.emit('query2', {});
+        });
+
+        socket.on('data_query2', function(data) {
+          updateTable(data);
+          clearChart();
+          updateChart2(data);
+        });
+
+        // --------------------------------------------
+
+        $('#get_query3').on('click', function() {
+          socket.emit('query3', {});
+        });
+
+        socket.on('data_query3', function(data) {
+          updateTable(data);
+          clearChart();
+          updateChart3(data);
+        });
+
+        // --------------------------------------------
+
+        $('#get_query4').on('click', function() {
+          socket.emit('query4', {});
+        });
+
+        socket.on('data_query4', function(data) {
+          updateTable(data);
+          clearChart();
+          updateChart4(data);
+        });
+
+        // ---------------------------------------------
+
+        $('#get_query5').on('click', function() {
+          socket.emit('query5', {});
+        });
+
+        socket.on('data_query5', function(data) {
+          updateTable(data);
+          clearChart();
+          updateChart5(data);
+        });
+
+        // ---------------------------------------------
+
+        $('#get_query6').on('click', function() {
+          socket.emit('query6', {});
+        });
+
+        socket.on('data_query6', function(data) {
+          updateTable(data);
+          clearChart();
+          updateChart6(data);
+        });
+
+        // ---------------------------------------------
+
+        $('#get_query7').on('click', function() {
+          socket.emit('query7', {});
+        });
+
+        socket.on('data_query7', function(data) {
+          updateTable(data);
+          clearChart();
+          updateChart7(data);
+        });
+
+        // ---------------------------------------------
+
+        $('#get_query8').on('click', function() {
+          socket.emit('query8', {});
+        });
+
+        socket.on('data_query8', function(data) {
+          updateTable(data);
+          clearChart();
+          updateChart8(data);
+        });
+
+        // ---------------------------------------------
+
+        $('#get_query9').on('click', function() {
+          socket.emit('query9', {});
+        });
+
+        socket.on('data_query9', function(data) {
+          updateTable(data);
+          clearChart();
+          updateChart9(data);
+        });
+
+        $('#start').bind('input', function() {
+          socket.emit('start', document.getElementById("start").value);
+        });
+
+        $('#end').bind('input', function() {
+          socket.emit('end', document.getElementById("end").value);
+        });
       });
+
+      function updateTable(data) {
+        var htmlResult = "<table><tr>";
+        for (var i = 0; i < data['metaData'].length; i++) {
+          htmlResult += "<th>" + data.metaData[i]['name'] + "</th>"
+        }
+        htmlResult += "</tr>";
+
+        for (var i = 0; i < data.rows.length; i++) {
+          htmlResult += "<tr>";
+
+          for (var j = 0; j < data.metaData.length; j++) {
+            var t = data.metaData[j]['name'];
+            htmlResult += "<td>" + data.rows[i][t] + "</td>";
+          }
+          htmlResult += "</tr>";
+        }
+        htmlResult += "</table>";
+        $('#tSec').html(htmlResult);
+      }
+
+      function clearChart() {
+        $('#myChart').remove(); // this is my <canvas> element
+        $('#canvasSection').append('<canvas id="myChart" style="width:400px height:400px"></canvas>');
+      }
+
+
+      function updateChart1(data) {
+        var myLabels = [];
+        var myData1 = [];
+        var myData2 = [];
+
+        for (var i = 0; i < data.rows.length; i++) {
+          myLabels.push(data.rows[i].PRODUCT_GROUP);
+          myData1.push(data.rows[i].NEW_ACCOUNTS);
+          myData2.push(data.rows[i].VARIATION);
+        }
+
+        var d1 = {
+            label: 'No of New Accounts',
+            data: myData1,
+            backgroundColor: [
+              'rgba(255, 117, 26, 0.2)'
+            ],
+            borderColor: [
+              'rgba(255, 117, 26, 1)'
+            ],
+            borderWidth: 1
+        };
+
+        var d2 = {
+            label: 'Variation in Loan Amount for New Cases',
+            data: myData2,
+            backgroundColor: [
+              'rgba(54, 162, 235, 0.2)'
+            ],
+            borderColor: [
+              'rgba(54, 162, 255, 1)'
+            ],
+            borderWidth: 1
+        };
+
+        var ctx = document.getElementById("myChart");
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: myLabels,
+                datasets: [d1, d2]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
+        });
+      }
+
+      function updateChart2(data) {
+        var myLabels = [];
+        var myData = [];
+
+        for (var i = 0; i < data.rows.length; i++) {
+          myLabels.push(data.rows[i].BRANCH_NAME);
+          myData.push(data.rows[i].DEFICIT);
+        }
+
+        var d1 = {
+            label: 'Deficit %',
+            data: myData,
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+              'rgba(255,99,132,1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)',
+                'rgba(255,99,132,1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)',
+                'rgba(255,99,132,1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)',
+                'rgba(255,99,132,1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        };
+
+        var ctx = document.getElementById("myChart");
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: myLabels,
+                datasets: [d1]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                },
+                tooltips: {
+                    callbacks: {
+                       label: function(tooltipItem) {
+                              return tooltipItem.yLabel;
+                       }
+                    }
+                }
+            }
+        });
+      }
+
+      function updateChart3(data) {
+        var myLabels = [];
+        var myData = [];
+
+        for (var i = 0; i < data.rows.length; i++) {
+          myLabels.push(data.rows[i].STATE);
+          myData.push(data.rows[i].DEFICIT);
+        }
+
+        var d1 = {
+            label: 'Deficit %',
+            data: myData,
+            backgroundColor: [
+              'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)',
+              'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)',
+              'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)',
+              'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)',
+              'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)',
+              'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)',
+              'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)',
+              'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)',
+              'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 0.2)'
+            ],
+            borderColor: [
+              'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)',
+              'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)',
+              'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)',
+              'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)',
+              'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)',
+              'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)',
+              'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)',
+              'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)',
+              'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)'
+            ],
+            borderWidth: 1
+        };
+
+        var ctx = document.getElementById("myChart");
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: myLabels,
+                datasets: [d1]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                },
+                tooltips: {
+                    callbacks: {
+                       label: function(tooltipItem) {
+                              return tooltipItem.yLabel;
+                       }
+                    }
+                }
+            }
+        });
+      }
+
+
+      function updateChart4(data) {
+        var myLabels = [];
+        var myData1 = [];
+        var myData2 = [];
+
+        for (var i = 0; i < data.rows.length; i++) {
+          myLabels.push(data.rows[i].PRODUCT_GROUP);
+          myData1.push(data.rows[i].HIGHEST_REVENUE);
+          myData2.push(data.rows[i].LOWEST_REVENUE);
+        }
+
+        var d1 = {
+            label: 'Highest Revenue',
+            data: myData1,
+            backgroundColor: [
+              'rgba(255, 117, 26, 0.2)',
+              'rgba(255, 117, 26, 0.2)',
+              'rgba(255, 117, 26, 0.2)',
+              'rgba(255, 117, 26, 0.2)',
+              'rgba(255, 117, 26, 0.2)'
+            ],
+            borderColor: [
+              'rgba(255, 117, 26, 1)',
+              'rgba(255, 117, 26, 1)',
+              'rgba(255, 117, 26, 1)',
+              'rgba(255, 117, 26, 1)',
+              'rgba(255, 117, 26, 1)'
+            ],
+            borderWidth: 1
+        };
+
+        var d2 = {
+            label: 'Lowest Revenue',
+            data: myData2,
+            backgroundColor: [
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(54, 162, 235, 0.2)'
+            ],
+            borderColor: [
+              'rgba(54, 162, 255, 1)',
+              'rgba(54, 162, 255, 1)',
+              'rgba(54, 162, 255, 1)',
+              'rgba(54, 162, 255, 1)',
+              'rgba(54, 162, 255, 1)'
+            ],
+            borderWidth: 1
+        };
+
+        var ctx = document.getElementById("myChart");
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: myLabels,
+                datasets: [d1, d2]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
+        });
+      }
+
+      function updateChart5(data) {
+        var myLabels = [];
+        var myData1 = [];
+        var myData2 = [];
+        var myData3 = [];
+        var myData4 = [];
+        var myData5 = [];
+
+        for (var i = 0; i < data.rows.length; i++) {
+          if ((i >= 0) && (i < 5))
+            myData1.push(data.rows[i].NO_OF_CUSTOMERS);
+            if ((i >= 5) && (i < 10))
+              myData2.push(data.rows[i].NO_OF_CUSTOMERS);
+              if ((i >= 10) && (i < 15))
+                myData3.push(data.rows[i].NO_OF_CUSTOMERS);
+                if ((i >= 15) && (i < 20))
+                  myData4.push(data.rows[i].NO_OF_CUSTOMERS);
+                  if ((i >= 20) && (i < 25))
+                    myData5.push(data.rows[i].NO_OF_CUSTOMERS);
+        }
+
+        var d1 = {
+            label: 'Commercial',
+            data: myData1,
+            backgroundColor: [
+              'rgba(54, 162, 235, 0.2)'
+            ],
+            borderColor: [
+              'rgba(54, 162, 235, 1)'
+            ],
+            borderWidth: 1
+        };
+
+        var d2 = {
+            label: 'Education',
+            data: myData2,
+            backgroundColor: [
+              'rgba(255, 206, 86, 0.2)'
+            ],
+            borderColor: [
+            'rgba(255, 206, 86, 1)'
+            ],
+            borderWidth: 1
+        };
+
+        var d3 = {
+            label: 'Home',
+            data: myData3,
+            backgroundColor: [
+              'rgba(75, 192, 192, 0.2)'
+            ],
+            borderColor: [
+              'rgba(75, 192, 192, 1)'
+            ],
+            borderWidth: 1
+        };
+
+        var d4 = {
+            label: 'Personal',
+            data: myData4,
+            backgroundColor: [
+              'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+            'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        };
+
+        var d5 = {
+            label: 'Vehicle',
+            data: myData5,
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.2)'
+            ],
+            borderColor: [
+              'rgba(255,99,132,1)'
+            ],
+            borderWidth: 1
+        };
+
+        var ctx = document.getElementById("myChart");
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ["Under 20", "21-30", "31-40", "41-50", "Above 50"],
+                datasets: [d1, d2, d3, d4, d5]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
+        });
+      }
+
+      function updateChart6(data) {
+        var myLabels = [];
+        var myData = [];
+
+        for (var i = 0; i < data.rows.length; i++) {
+          myLabels.push(data.rows[i].COLLECTION_DATE);
+          myData.push(data.rows[i].CHANGE);
+        }
+
+        var d1 = {
+            label: 'Expected Collection Variation (To Previous Day)',
+            data: myData,
+            backgroundColor: [
+              'rgba(255, 117, 26, 0.2)'
+            ],
+            borderColor: [
+              'rgba(255, 117, 26, 1)'
+            ],
+            borderWidth: 1
+        };
+
+        var ctx = document.getElementById("myChart");
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: myLabels,
+                datasets: [d1]
+            },
+            options: {
+              scaleShowLabelBackdrop : true,
+              scaleShowLabels : true,
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                },
+                tooltips: {
+                    callbacks: {
+                       label: function(tooltipItem) {
+                              return tooltipItem.yLabel;
+                       }
+                    }
+                }
+            }
+        });
+      }
+
+      function updateChart7(data) {
+        var myLabels = [];
+        var myData = [];
+
+        for (var i = 0; i < data.rows.length; i++) {
+          myLabels.push(data.rows[i].TRANSACTION_DATE);
+          myData.push(data.rows[i].CHANGE);
+        }
+
+        var d1 = {
+            label: 'Actual Collection Variation (To Previous Day)',
+            data: myData,
+            backgroundColor: [
+              'rgba(255, 117, 26, 0.2)'
+            ],
+            borderColor: [
+              'rgba(255, 117, 26, 1)'
+            ],
+            borderWidth: 1
+        };
+
+        var ctx = document.getElementById("myChart");
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: myLabels,
+                datasets: [d1]
+            },
+            options: {
+              scaleShowLabelBackdrop : true,
+              scaleShowLabels : true,
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                },
+                tooltips: {
+                    callbacks: {
+                       label: function(tooltipItem) {
+                              return tooltipItem.yLabel;
+                       }
+                    }
+                }
+            }
+        });
+      }
+
+      function updateChart8(data) {
+        var myLabels = [];
+        var myData1 = [];
+
+        for (var i = 0; i < data.rows.length; i++) {
+          myLabels.push(data.rows[i].FIRST_PROD + " to " + data.rows[i].SEC_PROD);
+          myData1.push(data.rows[i].NO_OF_CASES);
+        }
+
+        var d1 = {
+            label: 'No of Cases',
+            data: myData1,
+            backgroundColor: [
+              'rgba(255, 117, 26, 0.2)'
+            ],
+            borderColor: [
+              'rgba(255, 117, 26, 1)'
+            ],
+            borderWidth: 1
+        };
+
+        var ctx = document.getElementById("myChart");
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: myLabels,
+                datasets: [d1]
+            },
+            options: {
+              scaleShowLabels : true,
+              scaleShowLabelBackdrop : true,
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
+        });
+      }
+
+      function updateChart9(data) {
+        var myLabels = [];
+        var myData1 = [];
+        var myData2 = [];
+        var myData3 = [];
+
+        for (var i = 0; i < data.rows.length; i++) {
+          myLabels.push(data.rows[i].CUSTOMER_PROFILE);
+          myData1.push(data.rows[i].AVG_INCOME);
+          myData2.push(data.rows[i].AVG_OBLIGATIONS);
+          myData3.push(data.rows[i].AVG_EMI);
+        }
+
+        var d1 = {
+            label: 'Avg Income',
+            data: myData1,
+            backgroundColor: [
+              'rgba(255, 117, 26, 0.2)'
+            ],
+            borderColor: [
+              'rgba(255, 117, 26, 1)'
+            ],
+            borderWidth: 1
+        };
+
+        var d2 = {
+            label: 'Avg Obligations',
+            data: myData2,
+            backgroundColor: [
+              'rgba(54, 162, 235, 0.2)'
+            ],
+            borderColor: [
+              'rgba(54, 162, 255, 1)'
+            ],
+            borderWidth: 1
+        };
+
+        var d3 = {
+            label: 'Avg EMI',
+            data: myData3,
+            backgroundColor: [
+              'rgba(54, 162, 235, 0.2)'
+            ],
+            borderColor: [
+              'rgba(54, 162, 255, 1)'
+            ],
+            borderWidth: 1
+        };
+
+        var ctx = document.getElementById("myChart");
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: myLabels,
+                datasets: [d1, d2, d3]
+            },
+            options: {
+              scaleShowLabels : true,
+              scaleShowLabelBackdrop : true,
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
+        });
+      }
+
     </script>
 
   </body>
 
-</html>
-
-  </body>
 </html>
