@@ -36,7 +36,13 @@ td {
 
     <div class="w3-sidebar w3-bar-block w3-light-grey" style="width:18%">
       <div class="w3-container w3-dark-grey">
-        <h4>Dashboard</h4>
+        <h4>Home</h4>
+      </div>
+      <button id="about" type="button" class="" style="width:100%">About Us</button><br>
+      <button id="terms" type="button" class="" style="width:100%">Contact Us</button><br>
+      <button id="logout" type="button" class="" style="width:100%">Logout</button><br>
+	  <div class="w3-container w3-dark-grey">
+        <h4>Analysis Dashboard</h4>
       </div>
       <button id="get_query1" type="button" class="btn btn-success" style="width:100%">New Accounts Data</button><br>
       <button id="get_query2" type="button" class="btn btn-primary" style="width:100%">Branch Wise Deficit</button><br>
@@ -47,13 +53,23 @@ td {
       <button id="get_query7" type="button" class="btn btn-success"  style="width:100%">Actual Collection Distribution</button><br>
       <button id="get_query8" type="button" class="btn btn-primary"  style="width:100%">Returning Customers</button><br>
       <button id="get_query9" type="button" class="btn btn-success"  style="width:100%">Avg Customer Profile</button><br>
-      <div class="w3-container w3-dark-grey">
-        <h4>Back Home</h4>
-      </div>
+
     </div>
 
-<!-- class="container" -->
-    <div align="center" style="padding-top:50px; padding-bottom:50px; margin-left:21%; margin-right:3%">
+    <div id="headerDivAboutUs" align="center" style="padding-top:50px; padding-bottom:50px; margin-left:21%; margin-right:3%" >
+      <h3>About Us</h3><br>
+      The performance dashboard is a web based application for use by employees of a loan company thereby enabling them to calculate loan eligibility for new customers and analysing the loan data across different dimensions such as the region, state, branch, product, customer demographics and so on. The portal is only meant for employees of the company and cannot be accessed by customers. The employees should have a valid username login credentials to be able to access the system and its services.
+    </div>
+
+    <div id="headerDivTerms" align="center" style="padding-top:50px; padding-bottom:50px; margin-left:21%; margin-right:3%" >
+      <h3>Contact</h3><br><br>
+      Karan Dalvi (karan.j.dalvi@ufl.edu) <br><br>
+      Tanya Arora (arora.tanya@ufl.edu)<br><br>
+      Aishwarya Dubey (dubey.aishwarya@ufl.edu)<br><br>
+      Shreya Yaduvanshi <br>
+    </div>
+
+    <div id="contentDiv" align="center" style="padding-top:50px; padding-bottom:50px; margin-left:21%; margin-right:3%">
       <section id="userprompt">
        Enter Start Date (MMDDYYYY): <input type=text id="start" value="04012017"> <br><br>
        Enter End Date (MMDDYYYY):&nbsp&nbsp <input type=text id="end" value="04202017"> <br><br><br>
@@ -73,14 +89,37 @@ td {
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.js"></script>
     <script type="text/javascript">
 
+
       $(function() {
         var socket = io();
+
+        $('#headerDivAboutUs').slideUp();
+        $('#headerDivTerms').slideUp();
+        $('#contentDiv').slideUp();
+
+        $('#about').on('click', function() {
+          $('#headerDivAboutUs').slideDown();
+          $('#headerDivTerms').slideUp();
+          $('#contentDiv').slideUp();
+        });
+
+        $('#terms').on('click', function() {
+          $('#headerDivAboutUs').slideUp();
+          $('#headerDivTerms').slideDown();
+          $('#contentDiv').slideUp();
+        });
+
+
+		    $('#logout').on('click', function() {
+          window.location.replace("http://localhost:8080/login");
+        });
 
         $('#get_query1').on('click', function() {
           socket.emit('query1', {});
         });
 
         socket.on('data_query1', function(data) {
+          focusContent();
           updateTable(data);
           clearChart();
           updateChart1(data);
@@ -93,6 +132,7 @@ td {
         });
 
         socket.on('data_query2', function(data) {
+          focusContent();
           updateTable(data);
           clearChart();
           updateChart2(data);
@@ -105,6 +145,7 @@ td {
         });
 
         socket.on('data_query3', function(data) {
+          focusContent();
           updateTable(data);
           clearChart();
           updateChart3(data);
@@ -117,6 +158,7 @@ td {
         });
 
         socket.on('data_query4', function(data) {
+          focusContent();
           updateTable(data);
           clearChart();
           updateChart4(data);
@@ -129,6 +171,7 @@ td {
         });
 
         socket.on('data_query5', function(data) {
+          focusContent();
           updateTable(data);
           clearChart();
           updateChart5(data);
@@ -141,6 +184,7 @@ td {
         });
 
         socket.on('data_query6', function(data) {
+          focusContent();
           updateTable(data);
           clearChart();
           updateChart6(data);
@@ -153,6 +197,7 @@ td {
         });
 
         socket.on('data_query7', function(data) {
+          focusContent();
           updateTable(data);
           clearChart();
           updateChart7(data);
@@ -165,6 +210,7 @@ td {
         });
 
         socket.on('data_query8', function(data) {
+          focusContent();
           updateTable(data);
           clearChart();
           updateChart8(data);
@@ -177,6 +223,7 @@ td {
         });
 
         socket.on('data_query9', function(data) {
+          focusContent();
           updateTable(data);
           clearChart();
           updateChart9(data);
@@ -808,6 +855,11 @@ td {
         });
       }
 
+      function focusContent() {
+        $('#headerDivAboutUs').slideUp();
+        $('#headerDivTerms').slideUp();
+        $('#contentDiv').slideDown();
+      }
     </script>
 
   </body>

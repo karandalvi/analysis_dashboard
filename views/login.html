@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Performance Dashboard</title>
+  <meta name="description" content="Analysis Dashboard">
+  <meta name="author" content="karandalvi">
+
+  <link rel="stylesheet" href="css/bootstrap-theme.css">
+
+  <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
+  <![endif]-->
+  <link rel="icon" href="favicon.png" type="image/x-icon" />
+  <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script type="text/javascript">
+
+
+	$(function() {
+
+		$('#password').each(function() {
+		   var elem = $(this);
+
+		   elem.bind("propertychange change click keyup input paste", function(event){
+
+			  if ('' != elem.val()) {
+				toggleSubmit();
+			 }
+			 else {
+				toggleSubmit();
+			 }
+		   });
+		 });
+
+		$('#username').each(function() {
+		   var elem = $(this);
+
+		   elem.bind("propertychange change click keyup input paste", function(event){
+
+			  if ('' != elem.val()) {
+				toggleSubmit();
+			 }
+			 else {
+				toggleSubmit();
+			 }
+		   });
+		 });
+
+		$('#btnLogin').on('click', function(){
+			login();
+		});
+
+	});
+
+	function toggleSubmit() {
+		if (($('#password').val() != '') && ($('#username').val() != '')) {
+			$('#btnLogin').slideDown('300');
+		}
+		else {
+			$('#btnLogin').slideUp('300');
+		}
+	}
+
+	function login() {
+		if (($('#password').val() == 'dalvi') && ($('#username').val() == 'karan')) {
+			window.location.replace("http://localhost:8080/home");
+		}
+		else {
+			alert("Incorrect Username / Password");
+		}
+	}
+
+</script>
+
+</head>
+
+<body class=grad>
+
+	<div align=center>
+
+		<div class="navbar-static-top">
+			<br> <font class=headers> Performance Analysis Dashboard </font> <br/><br/>
+		</div>
+
+		<div class="navbar-default"> <br/><br/>
+		<!--	<form action="login.php" method="POST"> -->
+				<font class="smallheaders">
+					Username: &nbsp <input class="navbar-default" type=text id=username> <br/><br/>
+					Password:  &nbsp <input class="navbar-default" type=password id=password> <br/><br/>
+					<input type=submit class="btn-success" id=btnLogin value=Login hidden=true>
+				</font> <br/><br/>
+		<!--	</font> -->
+		</div>
+
+	</div>
+
+</body>
+</html>

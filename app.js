@@ -369,6 +369,10 @@ function setupExpress()
     end = "04202017";
 	});
 
+  app.get('/login', function(req, res)
+	{
+		res.sendFile('views/login.html', { root: '.' });
+	});
 
 	// Handle any misc errors by redirecting to a simple page and logging
 	app.use(function(err, req, res, next)
