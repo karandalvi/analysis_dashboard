@@ -1,6 +1,6 @@
 # Analysis Dashboard
 
-Analysis Dashboard with dynamic graphs to offer insights about loan data.
+Analysis Dashboard with dynamic graphs to offer insights into loan data.
 
 ## How to set up?
 
