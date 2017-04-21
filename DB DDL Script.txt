@@ -1,0 +1,107 @@
+create table company 
+(           company_id integer primary key, 
+            name varchar2(50), 
+            street varchar2(100),
+            city varchar2(50),            
+            state varchar2(50),
+            region varchar2(10),
+            zip varchar2(10) 
+);
+
+create table employee 
+(           employee_id integer primary key, 
+            name varchar2(50),
+            date_of_birth date, 
+            designation varchar2(50), 
+            company_id integer, 
+            constraint fk_emp_company
+            foreign key (company_id) references company(company_id)
+);
+
+create table branch
+(           branch_no  integer primary key, 
+            company_id integer,
+            name varchar2(50),
+            street varchar2(100),
+            city varchar2(50),
+            state varchar2(50),
+            region varchar2(10),
+            zip varchar2(10),
+            constraint fk_br_company 
+            foreign key (company_id) references company (company_id)
+);
+
+create table product
+(           product_no integer, 
+            sub_product_no integer,
+            product_name varchar2(50),
+            primary key (product_no, sub_product_no) 
+);
+
+
+create table customer
+(	customer_no integer primary key,
+	name varchar2(50),
+	date_of_birth date,
+	street varchar2(100),
+ 	city varchar2(50),
+	state varchar2(50),
+	zip varchar2(10),
+	ssn varchar2(9),
+	obligations number(20,2),
+	income number(20,2),
+	driver_license varchar2(50)
+);
+
+
+create table account
+(          account_no integer primary key, 
+           branch_no integer,
+           product_no integer,
+           sub_product_no integer,
+           customer_no integer,
+           interest_rate number(6,2),
+           status varchar2(50),
+           repayment_tenure integer,
+           loan_amount number(20,2),
+           outstanding_amount number(20,2),
+           interest number(20,2),
+           principal number(20,2),
+           arrears number(20,2),
+           charges number(20,2),
+           constraint fk_acc_branch 
+           foreign key (branch_no) references branch (branch_no),
+           constraint fk_acc_product 
+           foreign key (product_no, sub_product_no) 
+           references product (product_no, sub_product_no),
+           constraint fk_acc_customer
+           foreign key (customer_no) references customer (customer_no)
+);
+
+create table repayment_schedule 
+(	account_no integer,
+	repay_no integer, 
+	repay_date date,
+	repay_amount number(20,2), 
+	interest_part number(20,2),
+	principal_part number(20,2),
+	primary key (account_no, repay_no),
+	constraint fk_repay_acc 
+	foreign key (account_no) references account (account_no)
+);
+
+
+create table transaction 
+(	transaction_no integer primary key,
+    account_no integer, 
+	branch_no integer,
+	transaction_type varchar2(50),
+	transaction_date date, 
+	debit_amount number(20,2), 
+	credit_amount number(20,2),
+	constraint fk_trans_acc 
+	foreign key (account_no) references account (account_no),
+    constraint fk_trans_branch 
+	foreign key (branch_no) references branch (branch_no)
+
+);

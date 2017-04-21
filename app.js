@@ -16,9 +16,9 @@ socket.on('query1', function()
 {
   oracledb.getConnection(
     {
-      user          : "kdalvi",
-      password      : "DBMSsp17",
-      connectString : "oracle.cise.ufl.edu/orcl"
+      user          : "username",
+      password      : "password",
+      connectString : "hostname/dbname"
     },
     function(err, connection)
     {
@@ -48,9 +48,9 @@ socket.on('query2', function()
 {
   oracledb.getConnection(
     {
-      user          : "kdalvi",
-      password      : "DBMSsp17",
-      connectString : "oracle.cise.ufl.edu/orcl"
+      user          : "username",
+      password      : "password",
+      connectString : "hostname/dbname"
     },
     function(err, connection)
     {
@@ -85,9 +85,9 @@ socket.on('query3', function()
 {
   oracledb.getConnection(
     {
-      user          : "kdalvi",
-      password      : "DBMSsp17",
-      connectString : "oracle.cise.ufl.edu/orcl"
+      user          : "username",
+      password      : "password",
+      connectString : "hostname/dbname"
     },
     function(err, connection)
     {
@@ -121,9 +121,9 @@ socket.on('query4', function()
 {
   oracledb.getConnection(
     {
-      user          : "kdalvi",
-      password      : "DBMSsp17",
-      connectString : "oracle.cise.ufl.edu/orcl"
+      user          : "username",
+      password      : "password",
+      connectString : "hostname/dbname"
     },
     function(err, connection)
     {
@@ -158,9 +158,9 @@ socket.on('query5', function()
 {
   oracledb.getConnection(
     {
-      user          : "kdalvi",
-      password      : "DBMSsp17",
-      connectString : "oracle.cise.ufl.edu/orcl"
+      user          : "username",
+      password      : "password",
+      connectString : "hostname/dbname"
     },
     function(err, connection)
     {
@@ -195,9 +195,9 @@ socket.on('query6', function()
 {
   oracledb.getConnection(
     {
-      user          : "kdalvi",
-      password      : "DBMSsp17",
-      connectString : "oracle.cise.ufl.edu/orcl"
+      user          : "username",
+      password      : "password",
+      connectString : "hostname/dbname"
     },
     function(err, connection)
     {
@@ -230,9 +230,9 @@ socket.on('query7', function()
 {
   oracledb.getConnection(
     {
-      user          : "kdalvi",
-      password      : "DBMSsp17",
-      connectString : "oracle.cise.ufl.edu/orcl"
+      user          : "username",
+      password      : "password",
+      connectString : "hostname/dbname"
     },
     function(err, connection)
     {
@@ -264,9 +264,9 @@ socket.on('query8', function()
 {
   oracledb.getConnection(
     {
-      user          : "kdalvi",
-      password      : "DBMSsp17",
-      connectString : "oracle.cise.ufl.edu/orcl"
+      user          : "username",
+      password      : "password",
+      connectString : "hostname/dbname"
     },
     function(err, connection)
     {
@@ -301,9 +301,9 @@ socket.on('query9', function()
 {
   oracledb.getConnection(
     {
-      user          : "kdalvi",
-      password      : "DBMSsp17",
-      connectString : "oracle.cise.ufl.edu/orcl"
+      user          : "username",
+      password      : "password",
+      connectString : "hostname/dbname"
     },
     function(err, connection)
     {
@@ -337,9 +337,9 @@ socket.on('query10', function()
 {
   oracledb.getConnection(
     {
-      user          : "kdalvi",
-      password      : "DBMSsp17",
-      connectString : "oracle.cise.ufl.edu/orcl"
+      user          : "username",
+      password      : "password",
+      connectString : "hostname/dbname"
     },
     function(err, connection)
     {
@@ -376,9 +376,9 @@ socket.on('query11', function()
 {
   oracledb.getConnection(
     {
-      user          : "kdalvi",
-      password      : "DBMSsp17",
-      connectString : "oracle.cise.ufl.edu/orcl"
+      user          : "username",
+      password      : "password",
+      connectString : "hostname/dbname"
     },
     function(err, connection)
     {
@@ -414,9 +414,9 @@ socket.on('query12', function()
 {
   oracledb.getConnection(
     {
-      user          : "kdalvi",
-      password      : "DBMSsp17",
-      connectString : "oracle.cise.ufl.edu/orcl"
+      user          : "username",
+      password      : "password",
+      connectString : "hostname/dbname"
     },
     function(err, connection)
     {
@@ -440,100 +440,6 @@ socket.on('query12', function()
         });
     });
 });
-//
-// socket.on('query13', function()
-// {
-//   oracledb.getConnection(
-//     {
-//       user          : "kdalvi",
-//       password      : "DBMSsp17",
-//       connectString : "oracle.cise.ufl.edu/orcl"
-//     },
-//     function(err, connection)
-//     {
-//       if (err) {
-//         console.error(err.message);
-//         return;
-//       }
-//       connection.execute(
-//         ,
-//         {}, //bind variables
-//         function(err, result)
-//         {
-//           if (err) {
-//             console.error(err.message);
-//             doRelease(connection);
-//             return;
-//           }
-//           console.log('Request Processed Successfully');
-//           socket.emit('data_query13',result);
-//           doRelease(connection);
-//         });
-//     });
-// });
-//
-// socket.on('query14', function()
-// {
-//   oracledb.getConnection(
-//     {
-//       user          : "kdalvi",
-//       password      : "DBMSsp17",
-//       connectString : "oracle.cise.ufl.edu/orcl"
-//     },
-//     function(err, connection)
-//     {
-//       if (err) {
-//         console.error(err.message);
-//         return;
-//       }
-//       connection.execute(
-//         ,
-//         {}, //bind variables
-//         function(err, result)
-//         {
-//           if (err) {
-//             console.error(err.message);
-//             doRelease(connection);
-//             return;
-//           }
-//           console.log('Request Processed Successfully');
-//           socket.emit('data_query14',result);
-//           doRelease(connection);
-//         });
-//     });
-// });
-//
-// socket.on('query15', function()
-// {
-//   oracledb.getConnection(
-//     {
-//       user          : "kdalvi",
-//       password      : "DBMSsp17",
-//       connectString : "oracle.cise.ufl.edu/orcl"
-//     },
-//     function(err, connection)
-//     {
-//       if (err) {
-//         console.error(err.message);
-//         return;
-//       }
-//       connection.execute(
-//         ,
-//         {}, //bind variables
-//         function(err, result)
-//         {
-//           if (err) {
-//             console.error(err.message);
-//             doRelease(connection);
-//             return;
-//           }
-//           console.log('Request Processed Successfully');
-//           socket.emit('data_query15',result);
-//           doRelease(connection);
-//         });
-//     });
-// });
-
 
 socket.on('start', function(data)
 {
