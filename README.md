@@ -1,8 +1,8 @@
-#Analysis Dashboard#
+#Analysis Dashboard
 
 Analysis Dashboard with dynamic graphs to offer insights about loan data.
 
-#How to set up?#
+##How to set up?
 
 1. Set up the Oracle database with the help of DDL script. 
 
